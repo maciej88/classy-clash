@@ -1,6 +1,15 @@
 #include "raylib.h"
 #include "raymath.h"
 
+class Character
+{
+    public:
+   
+
+    private:
+
+};
+
 int main()
 {
     // window dimensions
