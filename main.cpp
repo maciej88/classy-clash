@@ -4,9 +4,22 @@
 class Character
 {
     public:
-   
+    Vector2 getWorldPos() { return worldPos; }
 
     private:
+    Texture2D texture;
+    Texture2D idle;
+    Texture2D run;
+    Vector2 screenPos;
+    Vector2 worldPos;
+
+    // 1 : facing right, -1 : facing left
+    float rightLeft{1.f};
+    // animation variables
+    float runningTime{};
+    int frame{};
+    const int maxFrames{6};
+    const float updateTime{1.f/12.f};
 
 };
 
@@ -32,7 +45,7 @@ int main()
         (float)windowDimensions[0]/2.0f - 4.0f * (0.5f * (float)knight.width/6.0f),
         (float)windowDimensions[1]/2.0f - 4.0f * (0.5f * (float)knight.height)
     };
-    
+
     // 1 : facing right, -1 : facing left
     float rightLeft{1.f};
     // animation variables
@@ -40,7 +53,6 @@ int main()
     int frame{};
     const int maxFrames{6};
     const float updateTime{1.f/12.f};
-
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
