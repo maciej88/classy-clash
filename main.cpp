@@ -9,9 +9,9 @@ public:
     void tick(float deltaTime);
 
 private:
-    Texture2D texture{LoadTexture("characters/knight_idle_sprirtesheet.png")};
-    Texture2D idle{LoadTexture("characters/knight_idle_sprirtesheet.png")};
-    Texture2D run{LoadTexture("characters/knight_run_sprirtesheet.png")};
+    Texture2D texture{LoadTexture("characters/knight_idle_spritesheet.png")};
+    Texture2D idle{LoadTexture("characters/knight_idle_spritesheet.png")};
+    Texture2D run{LoadTexture("characters/knight_run_spritesheet.png")};
     Vector2 screenPos{};
     Vector2 worldPos{};
 
@@ -73,14 +73,17 @@ void Character::tick(float deltaTime)
 int main()
 {
     // window dimensions
-    int windowDimensions[2];
-    windowDimensions[0] = 384; // width
-    windowDimensions[1] = 384; // height
+    const int windowWidth{384};
+    const int windowHeight{384};
+
     // initialize window
-    InitWindow(windowDimensions[0], windowDimensions[1], "Classy Clash");
+    InitWindow(windowWidth, windowHeight, "Classy Clash");
 
     Texture2D map = LoadTexture("nature_tileset/WorldMap.png");
     Vector2 mapPos{0.0, 0.0};
+
+    Character knight;
+    knight.setScreenPos(windowWidth, windowHeight);
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -88,8 +91,12 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
 
+        mapPos = Vector2Scale(knight.getWorldPos(), -1.f);
+
         // draw map
         DrawTextureEx(map, mapPos, 0.0, 4.0, WHITE);
+
+        knight.tick(GetFrameTime());
 
         // stop drawning
         EndDrawing();
