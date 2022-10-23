@@ -3,7 +3,7 @@
 class Character
 {
 public:
-
+    Character(); // <- konstruktor
     Vector2 getWorldPos() { return worldPos; }
     void setScreenPos(int winWidth, int winHeight);
     void tick(float deltaTime);
@@ -20,7 +20,9 @@ private:
     // animation variables
     float runningTime{};
     int frame{};
-    const int maxFrames{6};
-    const float updateTime{1.f / 12.f};
-    const float speed{4.f};
+    int maxFrames{6};
+    float updateTime{1.f / 12.f};
+    float speed{4.f};
+    float width{};
+    float height{};
 };
