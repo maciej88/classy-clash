@@ -33,9 +33,13 @@ int main()
 
         // chceck map bounds
         if (knight.getWorldPos().x < 0.f ||
-            knight.getWorldPos().y > 0.f ||
+            knight.getWorldPos().y < 0.f ||
             knight.getWorldPos().x + windowWidth > map.width * mapScale ||
             knight.getWorldPos().y + windowHeight > map.width * mapScale)
+
+        {
+            knight.undoMovement();
+        }
 
         // stop drawning
         EndDrawing();
