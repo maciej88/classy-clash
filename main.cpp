@@ -5,11 +5,12 @@ class Character
 {
     public:
     Vector2 getWorldPos() { return worldPos; }
+    void setScreenPos(int winWidth, int winHeight);
 
     private:
-    Texture2D texture;
-    Texture2D idle;
-    Texture2D run;
+    Texture2D texture{LoadTexture("characters/knight_idle_sprirtesheet.png")};
+    Texture2D idle{LoadTexture("characters/knight_idle_sprirtesheet.png")};
+    Texture2D run{LoadTexture("characters/knight_run_sprirtesheet.png")};
     Vector2 screenPos;
     Vector2 worldPos;
 
@@ -20,8 +21,17 @@ class Character
     int frame{};
     const int maxFrames{6};
     const float updateTime{1.f/12.f};
+    const float speed {4.f};
 
 };
+
+void Character::setScreenPos(int winWidth, int winHeight)
+{
+    screenPos = {(float)winWidth / 2.0f - 4.0f * (0.5f * (float)texture.width / 6.0f),
+                 (float)winHeight / 2.0f - 4.0f * (0.5f * (float)texture.height)
+    };
+}
+
 
 int main()
 {
