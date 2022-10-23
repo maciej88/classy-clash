@@ -3,11 +3,12 @@
 
 class Character
 {
-    public:
+public:
     Vector2 getWorldPos() { return worldPos; }
     void setScreenPos(int winWidth, int winHeight);
+    void tick(float deltaTime);
 
-    private:
+private:
     Texture2D texture{LoadTexture("characters/knight_idle_sprirtesheet.png")};
     Texture2D idle{LoadTexture("characters/knight_idle_sprirtesheet.png")};
     Texture2D run{LoadTexture("characters/knight_run_sprirtesheet.png")};
@@ -20,18 +21,49 @@ class Character
     float runningTime{};
     int frame{};
     const int maxFrames{6};
-    const float updateTime{1.f/12.f};
-    const float speed {4.f};
-
+    const float updateTime{1.f / 12.f};
+    const float speed{4.f};
 };
 
 void Character::setScreenPos(int winWidth, int winHeight)
 {
     screenPos = {(float)winWidth / 2.0f - 4.0f * (0.5f * (float)texture.width / 6.0f),
-                 (float)winHeight / 2.0f - 4.0f * (0.5f * (float)texture.height)
-    };
+                 (float)winHeight / 2.0f - 4.0f * (0.5f * (float)texture.height)};
 }
 
+void Character::tick(float deltaTime)
+{
+    Vector2 direction{};
+    if (IsKeyDown(KEY_A))
+        direction.x -= 1.0;
+    if (IsKeyDown(KEY_D))
+        direction.x += 1.0;
+    if (IsKeyDown(KEY_W))
+        direction.y -= 1.0;
+    if (IsKeyDown(KEY_S))
+        direction.y += 1.0;
+    if (Vector2Length(direction) != 0.0)
+    {
+        // set worldPos = worldPos + direction
+
+        worldPos = Vector2Add(worldPos, Vector2Scale(Vector2Normalize(direction), speed));
+        direction.x < 0.f ? rightLeft = -1.f : rightLeft = 1.f;
+        texture = run;
+    }
+    else
+    {
+        texture = idle;
+    }
+    // update animation frame
+    runningTime += GetFrameTime();
+    if (runningTime >= deltaTime)
+    {
+        frame++;
+        runningTime = 0.f;
+        if (frame > maxFrames)
+            frame = 0;
+    }
+}
 
 int main()
 {
@@ -52,9 +84,8 @@ int main()
     Texture2D knight_run = LoadTexture("characters/knight_run_spritesheet.png");
 
     Vector2 knightPos{
-        (float)windowDimensions[0]/2.0f - 4.0f * (0.5f * (float)knight.width/6.0f),
-        (float)windowDimensions[1]/2.0f - 4.0f * (0.5f * (float)knight.height)
-    };
+        (float)windowDimensions[0] / 2.0f - 4.0f * (0.5f * (float)knight.width / 6.0f),
+        (float)windowDimensions[1] / 2.0f - 4.0f * (0.5f * (float)knight.height)};
 
     // 1 : facing right, -1 : facing left
     float rightLeft{1.f};
@@ -62,7 +93,7 @@ int main()
     float runningTime{};
     int frame{};
     const int maxFrames{6};
-    const float updateTime{1.f/12.f};
+    const float updateTime{1.f / 12.f};
 
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -70,15 +101,19 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
 
-         Vector2 direction{};
-        if (IsKeyDown(KEY_A)) direction.x -= 1.0;
-        if (IsKeyDown(KEY_D)) direction.x += 1.0;
-        if (IsKeyDown(KEY_W)) direction.y -= 1.0;
-        if (IsKeyDown(KEY_S)) direction.y += 1.0;
+        Vector2 direction{};
+        if (IsKeyDown(KEY_A))
+            direction.x -= 1.0;
+        if (IsKeyDown(KEY_D))
+            direction.x += 1.0;
+        if (IsKeyDown(KEY_W))
+            direction.y -= 1.0;
+        if (IsKeyDown(KEY_S))
+            direction.y += 1.0;
         if (Vector2Length(direction) != 0.0)
         {
             // set mapPos = mapPos - direction
-            
+
             mapPos = Vector2Subtract(mapPos, Vector2Scale(Vector2Normalize(direction), speed));
             direction.x < 0.f ? rightLeft = -1.f : rightLeft = 1.f;
             knight = knight_run;
@@ -86,7 +121,6 @@ int main()
         else
         {
             knight = knight_idle;
-
         }
         // draw map
         DrawTextureEx(map, mapPos, 0.0, 4.0, WHITE);
@@ -97,13 +131,13 @@ int main()
         {
             frame++;
             runningTime = 0.f;
-            if (frame > maxFrames) frame = 0;
+            if (frame > maxFrames)
+                frame = 0;
         }
 
-
         // draw the character
-        Rectangle source{frame * (float)knight.width/6.f, 0.f, rightLeft * (float)knight.width/6.f, (float)knight.height};
-        Rectangle dest{knightPos.x, knightPos.y, 4.0f * (float)knight.width/6.0f, 4.0f * (float)knight.height};
+        Rectangle source{frame * (float)knight.width / 6.f, 0.f, rightLeft * (float)knight.width / 6.f, (float)knight.height};
+        Rectangle dest{knightPos.x, knightPos.y, 4.0f * (float)knight.width / 6.0f, 4.0f * (float)knight.height};
         DrawTexturePro(knight, source, dest, Vector2{}, 0.f, WHITE);
 
         // stop drawning
