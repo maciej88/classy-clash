@@ -4,7 +4,6 @@
 Character::Character(int winWidth, int winHeight) :
     windowWidth(winWidth),
     windowHeight(winHeight)
-
 {
     width = texture.width / maxFrames;
     height = texture.height;
@@ -16,11 +15,11 @@ Vector2 Character::getScreenPos()
         static_cast<float>(windowWidth) / 2.0f - scale * (0.5f * width),
         static_cast<float>(windowHeight) / 2.0f - scale * (0.5f * height)
     };
-
-} // Character::Character() { ... } < -definicja konstruktora
+} 
 
 void Character::tick(float deltaTime)
 {
+    if (!getAlive()) return;
 
     if (IsKeyDown(KEY_A))
         velocity.x -= 1.0;
@@ -45,7 +44,7 @@ void Character::tick(float deltaTime)
             weapon.width * scale,
             weapon.height * scale
         };
-        rotation = 35.f;
+        rotation = IsMouseButtonDown(MOUSE_LEFT_BUTTON) ? 35.f : 0.f;
     }
     else
     {
@@ -57,7 +56,7 @@ void Character::tick(float deltaTime)
             weapon.width * scale,
             weapon.height * scale
         };
-        rotation = -35.f;
+        rotation = IsMouseButtonDown(MOUSE_LEFT_BUTTON) ? -35.f : 0.f;
     }
 
     // draw the sword
@@ -72,7 +71,4 @@ void Character::tick(float deltaTime)
         weaponCollisionRec.height,
         RED
     );
-
-
-
 }

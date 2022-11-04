@@ -6,14 +6,11 @@
 
 int main()
 {
-    // window dimensions
     const int windowWidth{384};
     const int windowHeight{384};
+    InitWindow(windowWidth, windowHeight, "Stephen's Top Down");
 
-    // initialize window
-    InitWindow(windowWidth, windowHeight, "Classy Clash");
-
-    Texture2D map = LoadTexture("nature_tileset/WorldMap.png");
+    Texture2D map = LoadTexture("nature_tileset/OpenWorldMap24x24.png");
     Vector2 mapPos{0.0, 0.0};
     const float mapScale{4.0f};
 
@@ -39,8 +36,8 @@ int main()
 
         mapPos = Vector2Scale(knight.getWorldPos(), -1.f);
 
-        // draw map
-        DrawTextureEx(map, mapPos, 0.0, mapScale, WHITE);
+        // draw the map
+        DrawTextureEx(map, mapPos, 0.0, 4.0, WHITE);
 
         // draw the props
         for (auto prop : props)
@@ -49,13 +46,11 @@ int main()
         }
 
         knight.tick(GetFrameTime());
-
-        // chceck map bounds
+        // check map bounds
         if (knight.getWorldPos().x < 0.f ||
             knight.getWorldPos().y < 0.f ||
             knight.getWorldPos().x + windowWidth > map.width * mapScale ||
-            knight.getWorldPos().y + windowHeight > map.width * mapScale)
-
+            knight.getWorldPos().y + windowHeight > map.height * mapScale)
         {
             knight.undoMovement();
         }
@@ -67,11 +62,18 @@ int main()
                 knight.undoMovement();
             }
         }
+
         goblin.tick(GetFrameTime());
 
-        // stop drawning
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            if (CheckCollisionRecs(goblin.getCollisionRec(), knight.getWeaponCollisionRec()))
+            {
+                goblin.setAlive(false);
+            }
+        }
+
         EndDrawing();
     }
-
     CloseWindow();
 }
