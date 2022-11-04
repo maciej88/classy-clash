@@ -34,3 +34,4 @@ protected:
 private:
     bool alive{true};
 };
+#endif
